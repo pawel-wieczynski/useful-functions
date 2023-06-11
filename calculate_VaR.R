@@ -18,14 +18,14 @@ calculate_VaR_gaussian <- function(portfolio_returns, alpha) {
 
 calculate_VaR_t_student <- function(portfolio_returns, alpha) {
   fit_result = tryCatch({
-    fitdistr(portfolio_returns, 't')
+    suppressWarnings(MASS::fitdistr(portfolio_returns, 't'))
   }, error = function(e) {
     stop("Error in fitting t distribution: ", e$message)
   })
   
-  m = fit_result$estimate[1]
-  s = fit_result$estimate[2]
-  df = fit_result$estimate[3]
+  m = unname(fit_result$estimate[1])
+  s = unname(fit_result$estimate[2])
+  df = unname(fit_result$estimate[3])
   VaR = m + s * qt(alpha, df)
   indicator_ES = portfolio_returns < VaR
   exceeds = sum(indicator_ES)
