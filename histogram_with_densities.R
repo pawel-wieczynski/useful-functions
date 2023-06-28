@@ -1,7 +1,7 @@
 if (!require('pacman')) install.packages('pacman')
 pacman::p_load(ggplot2, MASS)
 
-histogram_with_densities = function(data, col) {
+histogram_with_densities = function(data, col, title = 'Histogram with fitted densities', bins = 50) {
   
   data[['col_scaled']] = scale(data[[col]])
   fit = suppressWarnings(MASS::fitdistr(data[['col_scaled']], 't'))
@@ -11,7 +11,7 @@ histogram_with_densities = function(data, col) {
   
     geom_histogram(
       aes(y = ..density..)
-      , bins = 50
+      , bins = bins
       , color = 'white'
       , fill = 'lightgray') +
     
@@ -35,12 +35,12 @@ histogram_with_densities = function(data, col) {
     theme(legend.position = 'bottom') +
     labs(
       x = '', y = 'Density', color = 'Distribution'
-      , title = 'Histogram with fitted densities'
+      , title = title
     ) -> p
   
   print(p)
   
 }
 
-data = data.frame(x = rnorm(1000) + rexp(1000))
-histogram_with_densities(data, 'x')
+# data = data.frame(x = rnorm(1000) + rexp(1000))
+# histogram_with_densities(data, 'x')
